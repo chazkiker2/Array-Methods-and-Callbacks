@@ -1,3 +1,4 @@
+
 export const fifaData = [
   {
     "Year": 1930,
@@ -18721,4 +18722,4 @@ export const fifaData = [
     "Home Team Initials": "BRA",
     "Away Team Initials": "NED"
   },
-]
+];
