@@ -1,6 +1,6 @@
-// import { fifaData } from './fifa';
 const fifaObject = require('./fifa');
 const fifaData = fifaObject.fifaData;
+// import { fifaData } from './fifa';
 // console.log(fifaData);
 // console.log('its working');
 
@@ -118,8 +118,8 @@ Hint: Investigate your data to find "team initials"!
 Hint: use `.reduce` */
 
 function getCountryWins(data, teamInitials) {
-  const teamStats = data.filter(match => match["Home Team Initials"] === teamInitials || match["Away Team Initials"] === teamInitials);
-  const teamWins = teamStats.filter(x => {
+  const teamMatches = data.filter(match => match["Home Team Initials"] === teamInitials || match["Away Team Initials"] === teamInitials);
+  const teamWins = teamMatches.filter(x => {
     let home;
     if (x["Home Team Initials"] === teamInitials) {
       home = true;
@@ -143,13 +143,49 @@ function getCountryWins(data, teamInitials) {
 
 /* Stretch 3: Write a function called getGoals() that accepts a parameter `data` and returns the team with the most goals score per appearance (average goals for) in the World Cup finals */
 
-function getGoals(/* code here */) {
-
-    /* code here */
-
+function getGoals(data) {
+  let teamsMap = new Map(); //key: team name, value: {goals, appearances}
+  const finals = data.filter(x => x["Stage"] === "Final");
+  finals.forEach(x => {
+    const homeName = x["Home Team Name"];
+    const homeGoals = x["Home Team Goals"];
+    const awayName = x["Away Team Name"];
+    const awayGoals = x["Away Team Goals"];
+    if (!teamsMap.has(homeName)) {
+      teamsMap.set(homeName, {goals: homeGoals, appearances: 1});
+    } else {
+      // const current = teamsMap.get(homeName).goals;
+      let newGoals = teamsMap.get(homeName).goals + homeGoals;
+      let newAppearances = teamsMap.get(homeName).appearances++;
+      teamsMap.set(homeName, {goals: newGoals, appearances: newAppearances });
+    }
+    if (!teamsMap.has(awayName)) {
+      teamsMap.set(awayName, {goals: awayGoals, appearances: 1});
+    } else {
+      // const current = teamsMap.get(homeName).goals;
+      let newGoals = teamsMap.get(awayName).goals + awayGoals;
+      let newAppearances = teamsMap.get(awayName).appearances++;
+      teamsMap.set(awayName, {goals: newGoals, appearances: newAppearances});
+    }
+  });
+  // return teamsMap;
+  let bestAvg = 0;
+  let bestTeam = "";
+  let bestEntry;
+  teamsMap.forEach( (val, key, map) => {
+    let currentAvg = val.goals / val.appearances;
+    if (currentAvg > bestAvg) {
+      bestAvg = currentAvg;
+      bestTeam = key;
+      bestEntry = `${key} —— Goals: ${val.goals}, App: ${val.appearances}`;
+    } else if (currentAvg === bestAvg) {
+      bestTeam.concat(", "+key);
+    }
+  });
+  return `${bestTeam} has the most goals scored per appearance: ${bestAvg}. \n\t${bestEntry}`;
 };
 
-getGoals();
+// console.log(getGoals(fifaData));
 
 
 /* Stretch 4: Write a function called badDefense() that accepts a parameter `data` and calculates the team with the most goals scored against them per appearance (average goals against) in the World Cup finals */
