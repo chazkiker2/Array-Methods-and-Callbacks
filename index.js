@@ -18,9 +18,10 @@ const fifaData = fifaObject.fifaData;
 
 const wcFinal2014 = fifaData.filter( x => {
   if (x["Stage"] === "Final" && x["Year"] === 2014) {
-    return x["Home Team Name"];
+    return true;
   }
 });
+// console.log(wcFinal2014);
 
 /* 1A */
 const homeTeamName = wcFinal2014[0]["Home Team Name"];
@@ -185,17 +186,50 @@ function getGoals(data) {
   return `${bestTeam} has the most goals scored per appearance: ${bestAvg}. \n\t${bestEntry}`;
 };
 
-// console.log(getGoals(fifaData));
+console.log(getGoals(fifaData));
 
 
 /* Stretch 4: Write a function called badDefense() that accepts a parameter `data` and calculates the team with the most goals scored against them per appearance (average goals against) in the World Cup finals */
 
-function badDefense(/* code here */) {
-
-    /* code here */
-
+function badDefense(data) {
+  let teamsMap = new Map();
+  const finals = data.filter(x => x["Stage"] === "Final");
+  finals.forEach(x => {
+    const homeName = x["Home Team Name"];
+    const homeGoals = x["Home Team Goals"];
+    const awayName = x["Away Team Name"];
+    const awayGoals = x["Away Team Goals"];
+    if (!teamsMap.has(homeName)) {
+      teamsMap.set(homeName, {goals: awayGoals, appearances: 1});
+    } else {
+      let newGoals = teamsMap.get(homeName).goals + awayGoals;
+      let newAppearances = teamsMap.get(homeName).appearances + 1;
+      teamsMap.set(homeName, {goals: newGoals, appearances: newAppearances });
+    }
+    if (!teamsMap.has(awayName)) {
+      teamsMap.set(awayName, {goals: homeGoals, appearances: 1});
+    } else {
+      let newGoals = teamsMap.get(awayName).goals + homeGoals;
+      let newAppearances = teamsMap.get(awayName).appearances + 1;
+      teamsMap.set(awayName, {goals: newGoals, appearances: newAppearances});
+    }
+  });
+  let worstAvg = 0;
+  let worstTeam = "";
+  let worstEntry;
+  teamsMap.forEach( (val, key, map) => {
+    let currentAvg = val.goals / val.appearances;
+    if (currentAvg > worstAvg) {
+      worstAvg = currentAvg;
+      worstTeam = key;
+      worstEntry = `${key} —— Goals Against: ${val.goals}, App: ${val.appearances}`;
+    } else if (currentAvg === worstAvg) {
+      worstTeam.concat(", "+key);
+    }
+  });
+  return `${worstTeam} has the most goals scored against per appearance: ${worstAvg}. \n\t${worstEntry}`;
 };
 
-badDefense();
+console.log(badDefense(fifaData));
 
 /* If you still have time, use the space below to work on any stretch goals of your chosing as listed in the README file. */
