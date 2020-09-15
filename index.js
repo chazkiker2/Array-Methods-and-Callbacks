@@ -156,7 +156,7 @@ function getGoals(data) {
     } else {
       // const current = teamsMap.get(homeName).goals;
       let newGoals = teamsMap.get(homeName).goals + homeGoals;
-      let newAppearances = teamsMap.get(homeName).appearances++;
+      let newAppearances = teamsMap.get(homeName).appearances + 1;
       teamsMap.set(homeName, {goals: newGoals, appearances: newAppearances });
     }
     if (!teamsMap.has(awayName)) {
@@ -164,7 +164,7 @@ function getGoals(data) {
     } else {
       // const current = teamsMap.get(homeName).goals;
       let newGoals = teamsMap.get(awayName).goals + awayGoals;
-      let newAppearances = teamsMap.get(awayName).appearances++;
+      let newAppearances = teamsMap.get(awayName).appearances + 1;
       teamsMap.set(awayName, {goals: newGoals, appearances: newAppearances});
     }
   });
