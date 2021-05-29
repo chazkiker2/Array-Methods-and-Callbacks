@@ -1,4 +1,7 @@
-export const fifaData = [
+module.exports = {
+  // export const fifaData = [
+  fifaData: [
+  
   {
     "Year": 1930,
     "Datetime": "13 Jul 1930 - 15:00",
@@ -18722,3 +18725,4 @@ export const fifaData = [
     "Away Team Initials": "NED"
   },
 ]
+}
